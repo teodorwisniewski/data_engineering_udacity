@@ -24,7 +24,7 @@ def create_sql_str_create_table(table_name:str, column_names: List, column_datat
 
 
 columns = "songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent".split(", ")
-types = ["SERIAL PRIMARY KEY", "INT", "INT", "VARCHAR", "INT", "INT", "INT", "VARCHAR", "VARCHAR"]
+types = ["SERIAL PRIMARY KEY", "INT", "INT", "VARCHAR", "VARCHAR", "INT", "INT", "VARCHAR", "VARCHAR"]
 songplay_table_create = create_sql_str_create_table("songplays", columns, types)
 
 columns = "user_id, first_name, last_name, gender, level".split(", ")
@@ -32,7 +32,7 @@ types = ["SERIAL PRIMARY KEY", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR"]
 user_table_create = create_sql_str_create_table("users", columns, types)
 
 columns = "song_id, title, artist_id, year, duration".split(", ")
-types = ["SERIAL PRIMARY KEY", "VARCHAR", "INT", "INT", "INT"]
+types = ["VARCHAR PRIMARY KEY", "VARCHAR", "INT", "INT", "INT"]
 song_table_create = create_sql_str_create_table("songs", columns, types)
 
 columns = "artist_id, name, location, latitude, longitude".split(", ")
@@ -46,9 +46,9 @@ time_table_create = create_sql_str_create_table("time", columns, types)
 # INSERT RECORDS
 
 
-def create_sql_insert_query(table_name: str, column_to_value_data:dict) -> Tuple[str, Tuple]:
+def create_sql_insert_query(table_name: str, column_to_value_data: dict) -> Tuple[str, Tuple]:
     """This function generates sql query for inserting new values into a table."""
-    placeholders = ", ".join("?"*len(column_to_value_data))
+    placeholders = ", ".join(["%s"]*len(column_to_value_data))
     column_names = ", ".join(column_to_value_data.keys())
     column_values = tuple(column_to_value_data.values())
     output_insert_query = f"""
