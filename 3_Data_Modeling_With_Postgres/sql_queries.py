@@ -24,7 +24,7 @@ def create_sql_str_create_table(table_name:str, column_names: List, column_datat
 
 
 columns_songplay = "songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent".split(", ")
-types = ["SERIAL PRIMARY KEY", "INT", "INT", "VARCHAR", "VARCHAR", "VARCHAR", "INT", "VARCHAR", "VARCHAR"]
+types = ["SERIAL PRIMARY KEY", "BIGINT", "INT", "VARCHAR", "VARCHAR", "VARCHAR", "INT", "VARCHAR", "VARCHAR"]
 songplay_table_create = create_sql_str_create_table("songplays", columns_songplay, types)
 
 columns_users = "user_id, first_name, last_name, gender, level".split(", ")
