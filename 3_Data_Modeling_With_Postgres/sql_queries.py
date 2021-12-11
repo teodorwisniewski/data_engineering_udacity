@@ -1,5 +1,5 @@
 # DROP TABLES
-from typing import List
+from typing import List, Tuple
 
 songplay_table_drop = "DROP TABLE IF EXISTS songplays"
 user_table_drop = "DROP TABLE IF EXISTS users"
@@ -44,6 +44,19 @@ types = ["TIMESTAMP  PRIMARY KEY", "INT", "INT", "INT", "INT", "INT", "INT"]
 time_table_create = create_sql_str_create_table("time", columns, types)
 
 # INSERT RECORDS
+
+
+def create_sql_insert_query(table_name: str, column_to_value_data:dict) -> Tuple[str, Tuple]:
+    """This function generates sql query for inserting new values into a table."""
+    placeholders = ", ".join("?"*len(column_to_value_data))
+    column_names = ", ".join(column_to_value_data.keys())
+    column_values = tuple(column_to_value_data.values())
+    output_insert_query = f"""
+        INSERT INTO {table_name}
+        ({column_names})
+        VALUES ({placeholders});
+    """
+    return output_insert_query, column_values
 
 songplay_table_insert = ("""
 """)
