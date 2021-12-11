@@ -1,5 +1,5 @@
 # DROP TABLES
-from typing import List, Tuple
+from typing import List, Tuple, Union
 
 songplay_table_drop = "DROP TABLE IF EXISTS songplays"
 user_table_drop = "DROP TABLE IF EXISTS users"
@@ -23,60 +23,65 @@ def create_sql_str_create_table(table_name:str, column_names: List, column_datat
     return output_query
 
 
-columns = "songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent".split(", ")
+columns_songplay = "songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent".split(", ")
 types = ["SERIAL PRIMARY KEY", "INT", "INT", "VARCHAR", "VARCHAR", "VARCHAR", "INT", "VARCHAR", "VARCHAR"]
-songplay_table_create = create_sql_str_create_table("songplays", columns, types)
+songplay_table_create = create_sql_str_create_table("songplays", columns_songplay, types)
 
-columns = "user_id, first_name, last_name, gender, level".split(", ")
+columns_users = "user_id, first_name, last_name, gender, level".split(", ")
 types = ["SERIAL PRIMARY KEY", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR"]
-user_table_create = create_sql_str_create_table("users", columns, types)
+user_table_create = create_sql_str_create_table("users", columns_users, types)
 
-columns = "song_id, title, artist_id, year, duration".split(", ")
+columns_songs = "song_id, title, artist_id, year, duration".split(", ")
 types = ["VARCHAR PRIMARY KEY", "VARCHAR", "VARCHAR", "INT", "DECIMAL(10,6)"]
-song_table_create = create_sql_str_create_table("songs", columns, types)
+song_table_create = create_sql_str_create_table("songs", columns_songs, types)
 
-columns = "artist_id, name, location, latitude, longitude".split(", ")
+columns_artists = "artist_id, name, location, latitude, longitude".split(", ")
 types = ["VARCHAR PRIMARY KEY", "VARCHAR", "VARCHAR", "DECIMAL(10,6)", "DECIMAL(10,6)"]
-artist_table_create = create_sql_str_create_table("artists", columns, types)
+artist_table_create = create_sql_str_create_table("artists", columns_artists, types)
 
-columns = "start_time, hour, day, week, month, year, weekday".split(", ")
+columns_time = "start_time, hour, day, week, month, year, weekday".split(", ")
 types = ["TIMESTAMP  PRIMARY KEY", "INT", "INT", "INT", "INT", "INT", "INT"]
-time_table_create = create_sql_str_create_table("time", columns, types)
+time_table_create = create_sql_str_create_table("time", columns_time, types)
 
 # INSERT RECORDS
 
 
-def create_sql_insert_query(table_name: str, column_to_value_data: dict) -> Tuple[str, Tuple]:
+def create_sql_insert_query(table_name: str, column_info: Union[dict, List], have_column_values = False) -> Tuple[str, Tuple]:
     """This function generates sql query for inserting new values into a table."""
-    placeholders = ", ".join(["%s"]*len(column_to_value_data))
-    column_names = ", ".join(column_to_value_data.keys())
-    column_values = tuple(column_to_value_data.values())
+    placeholders = ", ".join(["%s"]*len(column_info))
+    if have_column_values:
+        column_names = ", ".join(column_info.keys())
+        column_values = tuple(column_info.values())
+    else:
+        column_names = ", ".join(column_info)
+        column_values = None
+
     output_insert_query = f"""
         INSERT INTO {table_name}
         ({column_names})
-        VALUES ({placeholders});
+        VALUES ({placeholders})
+        ON CONFLICT DO NOTHING;;
     """
     return output_insert_query, column_values
 
-songplay_table_insert = ("""
-""")
 
-user_table_insert = ("""
-""")
+songplay_table_insert, _ = create_sql_insert_query("songplays", columns_songplay)
 
-song_table_insert = ("""
-""")
+user_table_insert, _ = create_sql_insert_query("users", columns_users)
 
-artist_table_insert = ("""
-""")
+song_table_insert, _ = create_sql_insert_query("songs", columns_songs)
 
+artist_table_insert, _ = create_sql_insert_query("artists", columns_artists)
 
-time_table_insert = ("""
-""")
+time_table_insert, _ = create_sql_insert_query("time", columns_time)
+
 
 # FIND SONGS
 
-song_select = ("""
+song_select = ("""SELECT song_id, artist_id
+    FROM songs s
+    JOIN artists a ON s.artist_id = a.artist_id
+    WHERE s.title = %s AND a.name = %s AND s.duration = %s;
 """)
 
 # QUERY LISTS
