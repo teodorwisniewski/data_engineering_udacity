@@ -32,7 +32,7 @@ types = ["SERIAL PRIMARY KEY", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR"]
 user_table_create = create_sql_str_create_table("users", columns, types)
 
 columns = "song_id, title, artist_id, year, duration".split(", ")
-types = ["VARCHAR PRIMARY KEY", "VARCHAR", "INT", "INT", "DECIMAL(10,6)"]
+types = ["VARCHAR PRIMARY KEY", "VARCHAR", "VARCHAR", "INT", "DECIMAL(10,6)"]
 song_table_create = create_sql_str_create_table("songs", columns, types)
 
 columns = "artist_id, name, location, latitude, longitude".split(", ")
