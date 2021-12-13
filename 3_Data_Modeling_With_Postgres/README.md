@@ -9,6 +9,8 @@
 
 
 # Database schema design and ETL pipeline.
+
+## Files 
 In order to achieve analytics goals, we decided to use Postgres database that is open source and allows 
 to do aggregations and joins. Thus, this type of database is a perfect match for our purpose. The project directory contains 
 following files:
@@ -21,7 +23,19 @@ The create_tables.py file creates database and then it carries out instructions 
 SQL queries that we run in the create_tables.py file. Once the database is created, we can run etl.py file to populate our empty
 tables. The test.ipynb allows to carry out manual tests to see if all previous operations were correct.
 
+## Database design
+For this database, we decided to choose a star schema, which is easy to build. It is optimized for analytics tasks. In
+the center of star schema, one can find a fact table, which is in our case a songplays table. Then, we have several dimensions
+tables connected to the  songplays table:
+    * users table
+    * songs table
+    * artists table 
+    * time table
+
 
 
 
 # Usage example
+
+# Author
+Project made for Udacity during Data Engineering Nanodegree by Teodor Wisniewski
