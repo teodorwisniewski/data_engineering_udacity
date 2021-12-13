@@ -3,3 +3,4 @@ hello.py
 settings.json
 launch.json
 test-checkpoint.ipynb
+*.zip
