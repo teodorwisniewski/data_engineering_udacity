@@ -18,25 +18,26 @@ def create_sql_str_create_table(table_name:str, column_names: List, column_datat
         f"{column_name} {column_type}"
         for column_name, column_type in zip(column_names,column_datatypes)
     ]
+    comma_plus_new_line = ", \n"
     output_query = f"""CREATE TABLE IF NOT EXISTS {table_name}
-                    ({r", ".join(column_to_datatype)});"""
+                    ({comma_plus_new_line.join(column_to_datatype)});"""
     return output_query
 
 
 columns_songplay = "songplay_id, start_time, user_id, level, song_id, artist_id, session_id, location, user_agent".split(", ")
 types = ["SERIAL PRIMARY KEY",
-         "BIGINT",
-         "INT  REFERENCES 'users'  ('user_id') ON DELETE SET NULL",
+         'TIMESTAMP REFERENCES "time"  ("start_time") ON DELETE SET NULL',
+         'INT  REFERENCES "users"  ("user_id") ON DELETE SET NULL',
          "VARCHAR",
-         "VARCHAR  REFERENCES 'songs'  ('song_id') ON DELETE SET NULL",
-         "VARCHAR REFERENCES 'artists'  ('artist_id') ON DELETE SET NULL",
-         "TIMESTAMP REFERENCES 'time'  ('start_time') ON DELETE SET NULL",
+         'VARCHAR  REFERENCES "songs"  ("song_id") ON DELETE SET NULL',
+         'VARCHAR REFERENCES "artists"  ("artist_id") ON DELETE SET NULL',
+         'BIGINT',
          "VARCHAR",
          "VARCHAR"]
 songplay_table_create = create_sql_str_create_table("songplays", columns_songplay, types)
 
 columns_users = "user_id, first_name, last_name, gender, level".split(", ")
-types = ["SERIAL PRIMARY KEY", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR"]
+types = ["INT PRIMARY KEY", "VARCHAR", "VARCHAR", "VARCHAR", "VARCHAR"]
 user_table_create = create_sql_str_create_table("users", columns_users, types)
 
 columns_songs = "song_id, title, artist_id, year, duration".split(", ")
@@ -94,6 +95,6 @@ song_select = ("""SELECT s.song_id, s.artist_id
 
 # QUERY LISTS
 
-create_table_queries = [songplay_table_create, user_table_create, song_table_create,
-                        artist_table_create, time_table_create]
+create_table_queries = [user_table_create, song_table_create,
+                        artist_table_create, time_table_create, songplay_table_create]
 drop_table_queries = [songplay_table_drop, user_table_drop, song_table_drop, artist_table_drop, time_table_drop]
