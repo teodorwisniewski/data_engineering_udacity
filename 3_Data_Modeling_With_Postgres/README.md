@@ -39,6 +39,16 @@ The image below shows all tables in the database and their relationships between
 
 
 # Usage example
+Lets select only users that used the app before the date of 2018-11-2
+```
+SELECT *
+FROM public.songplays as sp
+join users u on u.user_id = sp.user_id 
+WHERE
+    start_time < '2018-11-2'
+```
+__Query results__ 
+![database schema design](./data/query_results.JPG)
 
 # Author
 Project made for Udacity during Data Engineering Nanodegree by Teodor Wisniewski
