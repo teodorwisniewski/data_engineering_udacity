@@ -26,11 +26,14 @@ tables. The test.ipynb allows to carry out manual tests to see if all previous o
 ## Database design
 For this database, we decided to choose a star schema, which is easy to build. It is optimized for analytics tasks. In
 the center of star schema, one can find a fact table, which is in our case a songplays table. Then, we have several dimensions
-tables connected to the  songplays table:
+tables connected to the  songplays table: <br>
     * users table
     * songs table
     * artists table 
     * time table
+
+The image below shows all tables in the database and their relationships between them:
+![database schema design](./data/db_diagramme.JPG)
 
 
 
