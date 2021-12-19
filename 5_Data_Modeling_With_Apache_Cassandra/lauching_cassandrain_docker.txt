@@ -1,0 +1,1 @@
+ docker run     --rm     --name cassandra_local     -p 9042:9042     cassandra:latest
