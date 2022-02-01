@@ -4,3 +4,4 @@ settings.json
 launch.json
 test-checkpoint.ipynb
 *.zip
+*.csv
