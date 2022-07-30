@@ -7,3 +7,4 @@ test-checkpoint.ipynb
 *.csv
 *.cfg
 *.json
+*.sh
