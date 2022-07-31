@@ -79,7 +79,7 @@ def process_song_data(spark, input_data_path, output_data_dir):
 def process_log_data(spark, input_data_path, output_data_dir):
     """
     This function allows to process JSON files that describe log data.
-    Based on this data, we create 3 tables: times, users and songplays_table.
+    Based on this data, we create the folllowing 3 tables: times, users and songplays.
     Those tables are saved in the parquet format.
 
     Inputs:
