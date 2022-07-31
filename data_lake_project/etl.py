@@ -35,6 +35,16 @@ def create_spark_session():
 
 
 def process_song_data(spark, input_data_path, output_data_dir):
+    """
+    This function allows to process JSON files that describe songs data.
+    Based on this data, we create 2 tables: songs and artists.
+    Those tables are saved in the parquet format.
+
+    Inputs:
+        spark: spark session object
+        input_data_path: str input path to the place where songs JSON can be found
+        output_data_dir: str, path to the directory where we save table in the parquet format
+    """
     # get filepath to song data file
     song_data_path = input_data_path + 'song_data/A/A/A/*.json'
 
@@ -63,10 +73,10 @@ def process_song_data(spark, input_data_path, output_data_dir):
     artists_table.write.mode("overwrite").parquet(output_artists_table_path)
 
 
-# def process_log_data(spark, input_data, output_data):
-#     # get filepath to log data file
-#     log_data =
-#
+def process_log_data(spark, input_data, output_data):
+    # get filepath to log data file
+    log_data =
+
 #     # read log data file
 #     df =
 #
@@ -109,8 +119,8 @@ def main():
     input_data = "data/"
     output_data = "outputs"
     
-    process_song_data(spark, input_data, output_data)
-    # process_log_data(spark, input_data, output_data)
+   # process_song_data(spark, input_data, output_data)
+    process_log_data(spark, input_data, output_data)
 
 
 if __name__ == "__main__":
