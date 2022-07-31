@@ -75,10 +75,13 @@ def process_song_data(spark, input_data_path, output_data_dir):
 
 def process_log_data(spark, input_data, output_data):
     # get filepath to log data file
-    log_data =
+    log_data_path = input_data + 'log_data/*.json'
 
-#     # read log data file
-#     df =
+    # read log data file
+    log_data_df = spark.read.json(log_data_path)
+    print(log_data_df.show(5))
+    print(log_data_df.columns)
+    # ['artist', 'auth', 'firstName', 'gender', 'itemInSession', 'lastName', 'length', 'level', 'location', 'method', 'page', 'registration', 'sessionId', 'song', 'status', 'ts', 'userAgent', 'userId']
 #
 #     # filter by actions for song plays
 #     df =
