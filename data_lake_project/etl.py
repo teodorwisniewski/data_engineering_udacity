@@ -34,26 +34,36 @@ def create_spark_session():
     return spark
 
 
-def process_song_data(spark, input_data_path, output_data_path):
+def process_song_data(spark, input_data_path, output_data_dir):
     # get filepath to song data file
     song_data_path = input_data_path + 'song_data/A/A/A/*.json'
 
     # read song data file
-    df = spark.read.json(song_data_path)
-    print(df.show(5))
-
+    original_song_df = spark.read.json(song_data_path)
+    print(original_song_df.show(5))
+    # ['artist_id', 'artist_latitude', 'artist_location', 'artist_longitude', 'artist_name', 'duration', 'num_songs', 'song_id', 'title', 'year']
+    print(original_song_df.columns)
 
     # extract columns to create songs table
-    # songs_table =
+    songs_columns = ['song_id', 'title', 'artist_id', 'year', 'duration']
+    songs_table = original_song_df.select(songs_columns)
+
+    # write songs table to parquet files partitioned by year and artist
+    output_songs_table_path = output_data_dir + "/songs.parquet"
+    songs_table.write.partitionBy("year", "artist_id").mode("overwrite").parquet(output_songs_table_path)
     #
-    # # write songs table to parquet files partitioned by year and artist
-    # songs_table
-    #
-    # # extract columns to create artists table
-    # artists_table =
-    #
-    # # write artists table to parquet files
-    # artists_table
+    # extract columns to create artists table
+    artists_columns = ["artist_id", "artist_name", "artist_location", "artist_latitude", "artist_longitude"]
+    artists_table = original_song_df.select(artists_columns).withColumnRenamed("artist_name", "name") \
+                                                            .withColumnRenamed("artist_location", "location") \
+                                                            .withColumnRenamed("artist_latitude", "lattitude") \
+                                                            .withColumnRenamed("artist_longitude", "longitude")
+
+        # write artists table to parquet files
+    output_artists_table_path = output_data_dir + "/artists.parquet"
+    artists_table.write.mode("overwrite").parquet(output_artists_table_path)
+    print(artists_table.columns)
+
     print("end process_song_data")
 
 
