@@ -73,9 +73,9 @@ def process_song_data(spark, input_data_path, output_data_dir):
     artists_table.write.mode("overwrite").parquet(output_artists_table_path)
 
 
-def process_log_data(spark, input_data, output_data):
+def process_log_data(spark, input_data_path, output_data_dir):
     # get filepath to log data file
-    log_data_path = input_data + 'log_data/*.json'
+    log_data_path = input_data_path + 'log_data/*.json'
 
     # read log data file
     log_data_df = spark.read.json(log_data_path)
@@ -83,14 +83,19 @@ def process_log_data(spark, input_data, output_data):
     print(log_data_df.columns)
     # ['artist', 'auth', 'firstName', 'gender', 'itemInSession', 'lastName', 'length', 'level', 'location', 'method', 'page', 'registration', 'sessionId', 'song', 'status', 'ts', 'userAgent', 'userId']
 #
-#     # filter by actions for song plays
-#     df =
-#
-#     # extract columns for users table
-#     artists_table =
-#
-#     # write users table to parquet files
-#     artists_table
+    # filter by actions for song plays
+    log_data_df = log_data_df.filter(log_data_df.page == 'NextSong')
+
+    # extract columns for users table
+    users_columns = ["userId", "firstName", "lastName", "gender", "level"]
+    users_table = log_data_df.select(users_columns).withColumnRenamed("userId", "user_id") \
+                                                    .withColumnRenamed("firstName", "first_name") \
+                                                    .withColumnRenamed("lastName", "last_name")
+    users_table = users_table.dropDuplicates()
+
+    # write users table to parquet files
+    output_users_table_path = output_data_dir + "/users.parquet"
+    users_table.write.mode("overwrite").parquet(output_users_table_path)
 #
 #     # create timestamp column from original timestamp column
 #     get_timestamp = udf()
