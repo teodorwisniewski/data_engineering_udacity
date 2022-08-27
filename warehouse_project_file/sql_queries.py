@@ -145,18 +145,69 @@ staging_songs_copy = (f"""
 # FINAL TABLES
 
 songplay_table_insert = ("""
+INSERT INTO songplays (start_time, user_id, level, song_id, artist_id, session_id, location, user_agent) 
+SELECT  
+        TIMESTAMP 'epoch' + se.ts/1000 * interval '1 second' AS start_time, 
+        se.user_id, 
+        se.user_level, 
+        ss.song_id,
+        ss.artist_id, 
+        se.session_id,
+        se.location, 
+        se.user_agent
+FROM staging_events AS se, staging_songs AS ss
+WHERE se.page = 'NextSong' 
+AND se.song_title = ss.title 
+AND se.artist_name = ss.artist_name 
+AND se.song_length = ss.duration
 """)
 
 user_table_insert = ("""
+    INSERT INTO users (user_id, first_name, last_name, gender, level)
+    SELECT DISTINCT  
+        user_id, 
+        user_first_name, 
+        user_last_name, 
+        user_gender, 
+        user_level
+    FROM staging_events
+    WHERE page = 'NextSong'
 """)
 
 song_table_insert = ("""
+        INSERT INTO songs (song_id, title, artist_id, year, duration) 
+        SELECT DISTINCT 
+                    song_id, 
+                    title,
+                    artist_id,
+                    year,
+                    duration
+        FROM staging_songs
+        WHERE song_id IS NOT NULL
 """)
 
 artist_table_insert = ("""
+        INSERT INTO artists (artist_id, name, location, latitude, longitude) 
+        SELECT DISTINCT 
+            artist_id,
+            artist_name,
+            artist_location,
+            artist_latitude::DECIMAL(8,6),
+            artist_longitude::DECIMAL(8,6)
+        FROM staging_songs
+        WHERE artist_id IS NOT NULL
 """)
 
 time_table_insert = ("""
+INSERT INTO time(start_time, hour, day, week, month, year, weekDay)
+SELECT start_time, 
+    EXTRACT(hour from start_time),
+    EXTRACT(day from start_time),
+    EXTRACT(week from start_time), 
+    EXTRACT(month from start_time),
+    EXTRACT(year from start_time), 
+    EXTRACT(dayofweek from start_time)
+FROM songplays
 """)
 
 # QUERY LISTS
