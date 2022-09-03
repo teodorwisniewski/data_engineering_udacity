@@ -8,3 +8,4 @@ test-checkpoint.ipynb
 *.cfg
 *.json
 *.sh
+*checkpoint*
