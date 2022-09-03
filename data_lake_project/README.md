@@ -14,10 +14,10 @@ Thus, we decided to use the dimensional modeling to create a star schema for our
 
 
 ## General outline
-The ETL process can be divised into the following step.
+The ETL process can be divided into the following step.
 1. Loading data from s3 bucket
 2. Transforming data data
-3. Uploading data into the s3 bucket.
+3. Uploading data into the s3 bucket in the parquet format.
 
 ## The star schema of the database
 
@@ -29,4 +29,3 @@ The star schema contains the following tables:
 * artist - stands for the dimension table containing the information about artits found in the app  
 * time - stands for the dimension table containing the information about timestamps of records in the songsplay
 
-## Example of use

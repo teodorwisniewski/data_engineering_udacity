@@ -1,3 +1,7 @@
+"""
+In this python module, we define sql queries for creating and populating tables.
+"""
+
 import configparser
 
 
@@ -129,17 +133,18 @@ CREATE TABLE time
 # STAGING TABLES
 
 staging_events_copy = (F"""
-                          COPY staging_events 
+                          COPY staging_events
                           FROM {config.get('S3','LOG_DATA')}
                           iam_role {config.get('IAM_ROLE', 'ARN')}
-                          json {config.get('S3','LOG_JSONPATH')};
+                          json {config.get('S3','LOG_JSONPATH')}  region { config['S3']['REGION']};
 """).format()
 
 staging_songs_copy = (f"""
-                          COPY staging_songs 
-                          FROM {config.get('S3','SONG_DATA')} 
+                          COPY staging_songs
+                          FROM {config.get('S3','SONG_DATA')}
                           iam_role {config.get('IAM_ROLE', 'ARN')}
-                          json 'auto';
+                          FORMAT AS JSON 'auto' 
+                          region { config['S3']['REGION']};
 """).format()
 
 # FINAL TABLES
@@ -192,8 +197,8 @@ artist_table_insert = ("""
             artist_id,
             artist_name,
             artist_location,
-            artist_latitude::DECIMAL(8,6),
-            artist_longitude::DECIMAL(8,6)
+            artist_latitude,
+            artist_longitude
         FROM staging_songs
         WHERE artist_id IS NOT NULL
 """)
